@@ -1,0 +1,29 @@
+{
+  "name": "steam",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "crypto-js": "^4.1.1",
+    "sass": "^1.63.6",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.2",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "eslint": "^8.39.0",
+    "eslint-plugin-vue": "^9.11.0",
+    "prettier": "^2.8.8",
+    "vite": "^4.3.9"
+  }
+}
