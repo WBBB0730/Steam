@@ -14,3 +14,11 @@ export function getSpecialsApi() {
         method: 'GET'
     })
 }
+
+export function getSearchSuggestionsApi(keyword) {
+    return request({
+        url: '/app/search/suggestions',
+        method: 'GET',
+        params: { keyword }
+    })
+}

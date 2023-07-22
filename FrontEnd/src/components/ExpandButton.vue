@@ -40,14 +40,18 @@ function closeMenu() {
 function addToWishlist() {
   addToWishlistApi(props.appId).then(() => {
     closeMenu()
-    emits('update:status', 1)
+    setTimeout(() => {
+      emits('update:status', 1)
+    }, 100)
   })
 }
 
 function removeFromWishlist() {
   removeFromWishlistApi(props.appId).then(() => {
     closeMenu()
-    emits('update:status', 0)
+    setTimeout(() => {
+      emits('update:status', 0)
+    }, 100)
   })
 }
 </script>

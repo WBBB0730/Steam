@@ -15,8 +15,24 @@
         <RouterLink class="store-nav-tab" to="">新闻</RouterLink>
         <RouterLink class="store-nav-tab" to="">实验室</RouterLink>
         <div class="search">
-          <input class="search-input" placeholder="搜索">
+          <input v-model="keyword" class="search-input" placeholder="搜索" @input="getSearchSuggestionsDebounce()">
           <RouterLink class="search-button" to=""/>
+          <!-- 搜索建议 -->
+          <div class="search-suggestions">
+            <RouterLink v-for="(item, index) in suggestions" :key="index" class="search-suggestion" :to="`/app/${item.appId}`">
+              <div class="search-suggestion-image">
+                <img :src="item.header" alt="">
+              </div>
+              <div class="search-suggestion-info">
+                <div class="search-suggestion-name">{{ item.name }}</div>
+                <div class="search-suggestion-price">{{ getPriceStr(item.finalPrice) }}</div>
+              </div>
+              <div v-if="item.status === 1" class="search-suggestion-on-wishlist">
+                <img src="@/assets/on_wishlist.png" alt="">
+                <span>已在愿望单中</span>
+              </div>
+            </RouterLink>
+          </div>
         </div>
       </div>
     </div>
@@ -114,10 +130,13 @@
 import Swiper from '@/components/Swiper.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
-import { getRecommendationsApi } from '@/api/app'
+import { getSearchSuggestionsApi, getRecommendationsApi } from '@/api/app'
 import ExpandButton from '@/components/ExpandButton.vue'
+import { debounce } from '@/utils/debounce'
 
 const currentHour = ref(new Date().getHours())
+const keyword = ref('')
+const suggestions = ref([])
 const recommendations = ref([])
 const specials = ref([])
 
@@ -130,6 +149,21 @@ const token = computed(() => store.getters['user/token'])
 onMounted(() => {
   getRecommendations()
 })
+
+const getSearchSuggestionsDebounce = debounce(getSearchSuggestions, 1000)
+
+/**
+ * 获取搜索建议
+ */
+function getSearchSuggestions() {
+  if(keyword.value.length === 0) {
+    suggestions.value = []
+    return
+  }
+  getSearchSuggestionsApi(keyword.value).then(({ data }) => {
+    suggestions.value = data
+  })
+}
 
 function getRecommendations() {
   getRecommendationsApi().then(({ data }) => {
@@ -241,6 +275,7 @@ function getPriceStr(price) {
 }
 
 .search {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -307,6 +342,91 @@ function getPriceStr(price) {
     background-image: url("@/assets/search_icon_btn.png");
     background-size: cover;
   }
+}
+
+.search-suggestions {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  box-shadow: 0 0 12px #000000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.search-input:focus ~ .search-suggestions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.search-suggestion {
+  width: 400px;
+  display: inline-flex;
+  gap: 8px;
+  padding: 4px 8px;
+  color: #f5f5f5;
+  background-color: #3d4450;
+  text-decoration: none;
+
+  &:hover {
+    color: #151515;
+    background-color: #dcdedf;
+  }
+}
+
+.search-suggestion-image {
+  width: 130px;
+  height: 61px;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.search-suggestion-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.search-suggestion-name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.search-suggestion-price {
+  font-size: 13px;
+}
+
+.search-suggestion-on-wishlist {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0 4px 4px;
+  box-shadow: 0 0 6px 0 #000000;
+  color: #111111;
+  background-color: #d3deea;
+  font-size: 11px;
+  line-height: 1;
+  transform: translateY(-50%);
+  transition: opacity 0.2s, left 0.2s;
+
+  & > span {
+    position: relative;
+    width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: width 0.2s;
+  }
+}
+
+.search-suggestion:hover .search-suggestion-on-wishlist > span {
+  width: 72px;
 }
 
 .store-section {
