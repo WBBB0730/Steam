@@ -106,12 +106,14 @@ onMounted(() => {
   getWishlist()
 })
 
+/** 获取愿望单 */
 function getWishlist() {
   getWishlistApi().then(({ data }) => {
     originList.value = data
   })
 }
 
+/** 对愿望单进行筛选和排序 */
 function computeWishlist() {
   const words = keyword.value.trim().split(/\s+/)
   let list = originList.value.filter(item => {
@@ -154,34 +156,40 @@ function computeWishlist() {
   wishlist.value = [...list]
 }
 
+/** 打开排序菜单 */
 function openSortMenu() {
   if (!sortMenuShown.value)
     sortMenuShown.value = true
 }
 
+/** 关闭排序菜单 */
 function closeSortMenu() {
   if (sortMenuShown.value)
     sortMenuShown.value = false
 }
 
+/** 修改排序方式 */
 function changeSortType(type) {
   closeSortMenu()
   sort.value = type
   localStorage.setItem('steamWishlistSort', type)
 }
 
+/** 将游戏移出愿望单 */
 function removeFromWishlist(appId) {
   removeFromWishlistApi(appId).then(() => {
     originList.value = originList.value.filter(item => item.appId !== appId)
   })
 }
 
+/** 拖拽开始 */
 function handleDragStart(event, index) {
   draggingIndex.value = index
   const wishlistRect = wishlistRef.value.getBoundingClientRect()
   draggingTop.value = event.y - wishlistRect.y - 84
 }
 
+/** 拖拽、排序 */
 function handleDrag(event) {
   if (draggingIndex.value === -1)
     return
@@ -195,6 +203,7 @@ function handleDrag(event) {
   }
 }
 
+/** 拖拽结束 */
 function handleDragEnd() {
   if (draggingIndex.value === -1)
     return
@@ -215,6 +224,7 @@ function handleDragEnd() {
   }))
 }
 
+/** 由拖拽元素的顶部位置计算下标 */
 function getIndexByTop(top) {
   let index = Math.floor((top - 12) / 180)
   if (index < draggingIndex.value)

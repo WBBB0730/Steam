@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getWishlistSizeApi() {
+    return request({
+        'url': '/wishlist/size',
+        method: 'GET'
+    })
+}
+
 export function addToWishlistApi(appId) {
     return request({
         url: '/wishlist',

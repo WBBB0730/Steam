@@ -134,6 +134,7 @@ import { getSearchSuggestionsApi, getRecommendationsApi } from '@/api/app'
 import ExpandButton from '@/components/ExpandButton.vue'
 import { debounce } from '@/utils/debounce'
 import { getDiscountStr, getPriceStr } from '@/utils/format'
+import { getWishlistSizeApi } from '@/api/wishlist'
 
 const currentHour = ref(new Date().getHours())
 const wishlistSize = ref(0)
@@ -149,14 +150,21 @@ const store = useStore()
 const token = computed(() => store.getters['user/token'])
 
 onMounted(() => {
+  getWishlistSize()
   getRecommendations()
 })
 
+/** 获取愿望单物品数量 */
+function getWishlistSize() {
+  getWishlistSizeApi().then(({ data }) => {
+    wishlistSize.value = data
+  })
+}
+
+/** 防抖+获取搜索建议 */
 const getSearchSuggestionsDebounce = debounce(getSearchSuggestions, 1000)
 
-/**
- * 获取搜索建议
- */
+/** 获取搜索建议 */
 function getSearchSuggestions() {
   if(keyword.value.length === 0) {
     suggestions.value = []
@@ -167,6 +175,7 @@ function getSearchSuggestions() {
   })
 }
 
+/** 获取推荐列表 */
 function getRecommendations() {
   getRecommendationsApi().then(({ data }) => {
     recommendations.value = [...data]

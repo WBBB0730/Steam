@@ -1,7 +1,9 @@
+/** 格式化折扣 */
 export function getDiscountStr(discount) {
     return '-' + Math.round(discount * 100) + '%'
 }
 
+/** 格式化价格 */
 export function getPriceStr(price) {
     return price === 0 ? '免费开玩' : '￥' + price.toFixed(2)
 }

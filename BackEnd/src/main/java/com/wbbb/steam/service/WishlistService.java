@@ -26,6 +26,10 @@ public class WishlistService {
         return toWishlistItemDtoList(wishlist);
     }
 
+    public Integer getWishlistSize(Long userId) {
+        return wishlistRepository.countAllByUserId(userId);
+    }
+
     public int addAppToWishlist(Long userId, Long appId) {
         if (!appRepository.existsById(appId))
             return 404;

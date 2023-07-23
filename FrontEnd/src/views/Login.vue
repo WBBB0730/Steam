@@ -7,12 +7,12 @@
           <!--账户名称-->
           <div class="username">
             <div class="username-label">用账户名称登录</div>
-            <input v-model="username" class="username-input" name="username" @input="errMsg = ''">
+            <input v-model="username" class="username-input" name="username" @input="clearErrMsg()">
           </div>
           <!--密码-->
           <div class="password">
             <div class="password-label">密码</div>
-            <input v-model="password" class="password-input" name="password" type="password" @input="errMsg = ''">
+            <input v-model="password" class="password-input" name="password" type="password" @input="clearErrMsg()">
           </div>
           <!--记住我-->
           <label class="remember">

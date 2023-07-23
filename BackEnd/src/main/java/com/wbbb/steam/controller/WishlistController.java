@@ -26,6 +26,14 @@ public class WishlistController {
         return ResponseDto.success(wishlistService.getWishlist(userId));
     }
 
+    @GetMapping("/size")
+    public ResponseDto<Integer> getWishlistSize(@RequestHeader("token") String token) {
+        Long userId = userService.parseToken(token);
+        if (userId == null)
+            return ResponseDto.unauthorized(null, "登录状态已失效，请重新登录");
+        return ResponseDto.success(wishlistService.getWishlistSize(userId));
+    }
+
     @PostMapping
     public ResponseDto<?> addAppToWishlist(
             @RequestParam("appId") Long appId,

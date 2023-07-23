@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import Loading from '@/components/Loading.vue'
 
 /**
- * 处理v-loading指令
+ * 处理v-loading指令，为true时在元素上显示加载动画
  */
 export default {
     mounted(el, binding) {

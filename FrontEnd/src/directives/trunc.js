@@ -1,5 +1,5 @@
 /**
- * 处理v-trunc指令
+ * 处理v-trunc指令，为true时自动截断多行字符串
  */
 export default {
     mounted(el) {

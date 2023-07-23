@@ -16,6 +16,11 @@ function qSort(list, comp, l, r) {
     qSort(list, comp, i + 1, r)
 }
 
+/**
+ * 快速排序
+ * @param list  待排序列表
+ * @param comp  比较函数 comp(a, b)，返回a排在b之前是否合法
+ */
 export function quickSort(list, comp) {
     qSort(list, comp, 0, list.length)
 }
