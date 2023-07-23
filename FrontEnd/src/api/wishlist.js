@@ -15,3 +15,17 @@ export function removeFromWishlistApi(appId) {
     })
 }
 
+export function getWishlistApi() {
+    return request({
+        url: '/wishlist',
+        method: 'GET'
+    })
+}
+
+export function sortWishlistApi(data) {
+    return request({
+        url: '/wishlist/sort',
+        method: 'PUT',
+        data
+    })
+}

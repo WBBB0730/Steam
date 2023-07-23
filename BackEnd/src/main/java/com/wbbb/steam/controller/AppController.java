@@ -7,6 +7,7 @@ import com.wbbb.steam.service.AppService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -60,6 +61,9 @@ public class AppController {
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "num", defaultValue = "5") Integer num,
             @RequestHeader(value = "token", required = false) String token) {
+        keyword = keyword.trim();
+        if (keyword.isEmpty())
+            return ResponseDto.success(new ArrayList<>());
         return ResponseDto.success(appService.getAppSearchSuggestions(keyword, num, token));
     }
 

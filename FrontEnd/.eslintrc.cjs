@@ -16,6 +16,7 @@ module.exports = {
     'object-curly-spacing': [1, 'always'],
     'semi': [1, 'never'],
     'vue/multi-word-component-names': [0],
+    'vue/no-unused-vars': [1],
     'no-unused-vars': [1]
   }
 }

@@ -1,5 +1,6 @@
 package com.wbbb.steam.service;
 
+import com.wbbb.steam.dto.request.SortWishlistDto;
 import com.wbbb.steam.dto.response.data.WishlistItemDto;
 import com.wbbb.steam.entity.App;
 import com.wbbb.steam.entity.WishlistItem;
@@ -9,7 +10,9 @@ import com.wbbb.steam.repository.WishlistRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -37,6 +40,20 @@ public class WishlistService {
             return 404;
         wishlistRepository.deleteById(new WishlistItemId(userId, appId));
         return 200;
+    }
+
+    public void sortWishlist(Long userId, List<SortWishlistDto> list) {
+        Map<Long, Integer> map = new HashMap<>();
+        for (SortWishlistDto item : list)
+            map.put(item.getAppId(), item.getSort());
+        List<WishlistItem> wishlist = wishlistRepository.findAllByUserId(userId);
+        for (WishlistItem item : wishlist) {
+            if (map.containsKey(item.getAppId())) {
+                int sort = map.get(item.getAppId());
+                item.setSort(sort);
+            }
+        }
+        wishlistRepository.saveAll(wishlist);
     }
 
     public WishlistItemDto toWishlistItemDto(WishlistItem wishlistItem) {

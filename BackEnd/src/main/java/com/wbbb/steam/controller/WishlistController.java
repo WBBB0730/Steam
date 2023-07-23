@@ -1,5 +1,6 @@
 package com.wbbb.steam.controller;
 
+import com.wbbb.steam.dto.request.SortWishlistDto;
 import com.wbbb.steam.dto.response.ResponseDto;
 import com.wbbb.steam.dto.response.data.WishlistItemDto;
 import com.wbbb.steam.service.UserService;
@@ -55,5 +56,14 @@ public class WishlistController {
         if (code == 404)
             return ResponseDto.notFound(null, "愿望单中未找到该游戏");
         return ResponseDto.serverError(null);
+    }
+
+    @PutMapping("/sort")
+    public ResponseDto<?> sortWishlist(@RequestBody List<SortWishlistDto> list, @RequestHeader("token") String token) {
+        Long userId = userService.parseToken(token);
+        if (userId == null)
+            return ResponseDto.unauthorized(null, "登录状态已失效，请重新登录");
+        wishlistService.sortWishlist(userId, list);
+        return ResponseDto.success(null);
     }
 }

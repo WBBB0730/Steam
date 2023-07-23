@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Shop from '@/views/shop/Shop.vue'
+import Store from '@/views/store/Store.vue'
 import store from '@/store'
 
 const router = createRouter({
@@ -7,18 +7,18 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            name: 'shop',
-            component: Shop
+            name: 'store',
+            component: Store
         },
         {
             path: '/app/:appId',
             name: 'app',
-            component: () => import('@/views/shop/App.vue')
+            component: () => import('@/views/store/App.vue')
         },
         {
             path: '/wishlist',
             name: 'wishlist',
-            component: () => import('@/views/Shop/WishList.vue'),
+            component: () => import('@/views/store/WishList.vue'),
             meta: { requiresAuth: true }
         },
         {
@@ -89,7 +89,7 @@ router.beforeEach(async (to, from) => {
     }
 
     // 监听路由变化
-    if (['shop', 'wishlist'].includes(to.name)) {
+    if (['store', 'wishlist'].includes(to.name)) {
         store.commit('setCurrent', 0)
     } else if (['community', 'profile'].includes(to.name)) {
         console.log(store.getters['user/userId'], to.params)

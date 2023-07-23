@@ -5,11 +5,11 @@
         <img src="@/assets/logo_steam.svg" alt="steam" />
       </div>
       <div class="nav">
-        <RouterLink class="nav-item" :class="{ current: current === 0 }" to="/" @click="shopMenuLocked = true" @mouseenter="shopMenuLocked = false">
+        <RouterLink class="nav-item" :class="{ current: current === 0 }" to="/" @click="storeMenuLocked = true" @mouseenter="storeMenuLocked = false">
           商店
-          <div v-show="!shopMenuLocked" class="nav-menu">
-            <RouterLink class="nav-menu-item" to="/" @click="shopMenuLocked = true">主页</RouterLink>
-            <RouterLink class="nav-menu-item" to="/wishlist" @click="shopMenuLocked = true">愿望单</RouterLink>
+          <div v-show="!storeMenuLocked" class="nav-menu">
+            <RouterLink class="nav-menu-item" to="/" @click="storeMenuLocked = true">主页</RouterLink>
+            <RouterLink class="nav-menu-item" to="/wishlist" @click="storeMenuLocked = true">愿望单</RouterLink>
           </div>
         </RouterLink>
         <RouterLink class="nav-item" :class="{ current: current === 1 }" to="/community">社区</RouterLink>
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <RouterLink v-if="token" class="user-avatar" to="">
+        <RouterLink v-if="token" class="user-avatar" :to="`/profile/${userId}`">
           <img :src="avatar || '/src/assets/blank.png'" alt="">
         </RouterLink>
         <RouterLink v-else class="login" to="/login">登录</RouterLink>
@@ -48,7 +48,7 @@
 import { computed, inject, ref } from 'vue'
 import { useStore } from 'vuex'
 
-const shopMenuLocked = ref(false)
+const storeMenuLocked = ref(false)
 const actionMenuLocked = ref(false)
 
 const store = useStore()
