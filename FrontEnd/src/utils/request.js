@@ -2,8 +2,8 @@ import axios from 'axios'
 import store from '@/store'
 
 const service = axios.create({
-    baseURL: 'http://localhost:8080',
-    // baseURL: 'https://mock.apifox.cn/m1/2987398-0-default',
+    // baseURL: 'http://localhost:8080',
+    baseURL: 'https://mock.apifox.cn/m1/2987398-0-default',
     timeout: 5000
 })
 

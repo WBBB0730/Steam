@@ -1,5 +1,6 @@
 import Md5 from 'crypto-js/md5'
 import { loginApi, getUserInfoApi } from '@/api/user'
+import router from '@/router'
 
 const state = {
     token: JSON.parse(localStorage.getItem('steamToken')) || JSON.parse(sessionStorage.getItem('steamToken')) || null,
@@ -50,6 +51,8 @@ const actions = {
         commit('setUserInfo', { userId: null, username: null, nickname: null, avatar: null })
         localStorage.removeItem('steamToken')
         sessionStorage.removeItem('steamToken')
+        // 刷新页面
+        router.go(0)
     },
     /**
      * 登录

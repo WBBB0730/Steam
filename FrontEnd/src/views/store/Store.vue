@@ -44,12 +44,12 @@
           <RouterLink class="recommendation" :to="`/app/${item.appId}`"
                       @mouseenter="recommendationHovered = true" @mouseleave="recommendationHovered = false">
             <div class="recommendation-cover">
-              <img class="current" :src="item.cover" alt="">
+              <img class="current" v-lazy="item.cover" alt="">
               <template v-for="(item, index) in item.images" :key="index">
-                <img :class="{ current: recommendationImageIndex === index }" :src="item" alt="">
+                <img :class="{ current: recommendationImageIndex === index }" v-lazy="item" alt="">
               </template>
               <ExpandButton v-if="token" v-model:status="item.status" :app-id="item.appId"
-                            :show="recommendationHovered"/>
+                            :show="recommendationHovered" @update:status="getWishlistSize()"/>
               <div class="recommendation-on-wishlist" :class="{ show: item.status === 1 }">
                 <img src="@/assets/on_wishlist.png" alt="">
                 <span>已在愿望单中</span>
@@ -60,7 +60,7 @@
               <div class="recommendation-images">
                 <div v-for="(item, index) in item.images.slice(0, 4)" :key="index" class="recommendation-image"
                      @mouseenter="recommendationImageIndex = index" @mouseleave="recommendationImageIndex = -1">
-                  <img :src="item" alt="">
+                  <img v-lazy="item" alt="">
                 </div>
               </div>
               <div>
@@ -189,7 +189,6 @@ function getRecommendations() {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 940px;
   min-height: max(calc(100vh - 104px), 765px);
   font-family: "Motiva Sans", sans-serif;
   overflow: hidden;

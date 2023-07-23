@@ -86,6 +86,13 @@ router.beforeEach(async (to, from) => {
                 }
             })
         }
+    } else {
+        if (['wishlist'].includes(to.name)) {
+            return {
+                name: 'login',
+                query: { redir: to.path }
+            }
+        }
     }
 
     // 监听路由变化

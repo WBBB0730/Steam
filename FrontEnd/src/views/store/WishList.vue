@@ -25,13 +25,17 @@
       </div>
     </div>
 
-    <div ref="wishlistRef" class="list" :style="{ height: wishlist.length * 180 + 'px' }">
+    <div ref="wishlistRef" class="list" :style="{ minHeight: wishlist.length * 180 + 'px' }">
+      <div v-if="wishlist.length === 0" class="empty">
+        <p>哎呀，这里无内容可显示</p>
+        <p>您的愿望单里有 {{ originList.length }} 件物品，但均不匹配您在上方应用的筛选条件。</p>
+      </div>
       <div v-for="(item, index) in wishlist" :key="index"
            class="list-item" :class="{ dragging: draggingIndex === index }"
            :style="{ top: draggingIndex === index ? draggingTop + 'px' : (12 + 180 * index) + 'px' }">
         <div v-if="sort === 0 && !keyword" class="handle" @mousedown="handleDragStart($event, index)"/>
         <RouterLink class="list-item-image" :to="`/app/${item.appId}`">
-          <img :src="item.header" alt="">
+          <img v-lazy="item.header" alt="">
         </RouterLink>
         <div class="list-item-info">
           <RouterLink class="name" :to="`/app/${item.appId}`">{{ item.name }}</RouterLink>
@@ -70,7 +74,7 @@
             </div>
             <div class="add-time-area">
               添加日期：{{ getDateStr(item.addTime, 'YYYY/M/D') }} （<span class="remove"
-                                                                         @click="removeFromWishlist(item.appId)">移除</span>）
+                                                                         @click="removeFromWishlist(item)">移除</span>）
             </div>
           </div>
         </div>
@@ -85,6 +89,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { quickSort } from '@/utils/sort'
 import { getDateStr, getDiscountStr, getPriceStr } from '@/utils/format'
 import { getWishlistApi, removeFromWishlistApi, sortWishlistApi } from '@/api/wishlist'
+import { showModal } from '@/utils/showModal'
 
 const wishlistRef = ref(null)
 const draggingIndex = ref(-1)
@@ -176,9 +181,15 @@ function changeSortType(type) {
 }
 
 /** 将游戏移出愿望单 */
-function removeFromWishlist(appId) {
-  removeFromWishlistApi(appId).then(() => {
-    originList.value = originList.value.filter(item => item.appId !== appId)
+function removeFromWishlist(app) {
+  const { appId, name } = app
+  showModal({
+    title: '是否将此物品从您的愿望单移除？',
+    content: `您确定要将“${name}”从您的愿望单移除吗？\n\n您随时可以从商店页面将其重新添加。`
+  }).then(() => {
+    removeFromWishlistApi(appId).then(() => {
+      originList.value = originList.value.filter(item => item.appId !== appId)
+    })
   })
 }
 
@@ -239,6 +250,7 @@ function getIndexByTop(top) {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: calc(100vh - 104px);
   background-color: #202326;
 }
 
@@ -354,6 +366,17 @@ function getIndexByTop(top) {
   position: relative;
   width: 940px;
   padding: 12px 0 80px 0;
+}
+
+.empty {
+  padding: 80px 0;
+  color: #e5e5e5;
+  font-size: 14px;
+  text-align: center;
+
+  :last-child {
+    font-size: 12px;
+  }
 }
 
 .list-item {
