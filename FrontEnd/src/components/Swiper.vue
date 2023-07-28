@@ -56,9 +56,7 @@ function start() {
 }
 
 function select(index) {
-  pause()
   current.value = index
-  start()
 }
 </script>
 

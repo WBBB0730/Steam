@@ -30,7 +30,7 @@
         <p>哎呀，这里无内容可显示</p>
         <p>您的愿望单里有 {{ originList.length }} 件物品，但均不匹配您在上方应用的筛选条件。</p>
       </div>
-      <div v-for="(item, index) in wishlist" :key="index"
+      <div v-for="(item, index) in wishlist" :key="item.appId"
            class="list-item" :class="{ dragging: draggingIndex === index }"
            :style="{ top: draggingIndex === index ? draggingTop + 'px' : (12 + 180 * index) + 'px' }">
         <div v-if="sort === 0 && !keyword" class="handle" @mousedown="handleDragStart($event, index)"/>
@@ -73,8 +73,8 @@
               </div>
             </div>
             <div class="add-time-area">
-              添加日期：{{ getDateStr(item.addTime, 'YYYY/M/D') }} （<span class="remove"
-                                                                         @click="removeFromWishlist(item)">移除</span>）
+              添加日期：{{ getDateStr(item.addTime, 'YYYY/M/D') }} （
+              <span class="remove" @click="removeFromWishlist(item)">移除</span>）
             </div>
           </div>
         </div>
@@ -237,9 +237,7 @@ function handleDragEnd() {
 
 /** 由拖拽元素的顶部位置计算下标 */
 function getIndexByTop(top) {
-  let index = Math.floor((top - 12) / 180)
-  if (index < draggingIndex.value)
-    index++
+  let index = Math.floor((top + 80) / 180)
   return Math.max(Math.min(index, originList.value.length - 1), 0)
 }
 
@@ -387,7 +385,7 @@ function getIndexByTop(top) {
   background-color: rgba(64, 81, 99, 0.9);
 
   &:not(.dragging) {
-    transition: top 0.3s;
+    //transition: top 0.3s;
   }
 
   &.dragging {
