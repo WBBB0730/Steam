@@ -32,6 +32,28 @@ const router = createRouter({
             component: () => import('@/views/community/Profile.vue')
         },
         {
+            path: '/friends',
+            name: 'friends',
+            component: () => import('@/views/mine/Friends.vue'),
+            children: [
+                {
+                    path: '',
+                    name: 'friendList',
+                    component: () => import('@/views/mine/friends/List.vue')
+                },
+                {
+                    path: 'add',
+                    name: 'friendAdd',
+                    component: () => import('@/views/mine/friends/Add.vue')
+                },
+                {
+                    path: 'pending',
+                    name: 'friendPending',
+                    component: () => import('@/views/mine/friends/Pending.vue')
+                }
+            ]
+        },
+        {
             path: '/about',
             name: 'about',
             component: () => import('@/views/about/About.vue')
@@ -87,28 +109,12 @@ router.beforeEach(async (to, from) => {
             })
         }
     } else {
-        if (['wishlist'].includes(to.name)) {
+        if (['wishlist', 'friendList', 'friendAdd', 'friendPending'].includes(to.name)) {
             return {
                 name: 'login',
                 query: { redir: to.path }
             }
         }
-    }
-
-    // 监听路由变化
-    if (['store', 'wishlist'].includes(to.name)) {
-        store.commit('setCurrent', 0)
-    } else if (['community', 'profile'].includes(to.name)) {
-        console.log(store.getters['user/userId'], to.params)
-        if (['profile'].includes(to.name) && token && store.getters['user/userId'].toString() === to.params.userId) {
-            store.commit('setCurrent', 2)
-        } else {
-            store.commit('setCurrent', 1)
-        }
-    } else if (['about'].includes(to.name)) {
-        store.commit('setCurrent', 3)
-    } else if (['chat'].includes(to.name)) {
-        store.commit('setCurrent', 4)
     }
 })
 

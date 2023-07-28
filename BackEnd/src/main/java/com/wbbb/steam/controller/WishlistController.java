@@ -1,6 +1,6 @@
 package com.wbbb.steam.controller;
 
-import com.wbbb.steam.dto.request.SortWishlistDto;
+import com.wbbb.steam.dto.request.SortWishlistRequestDto;
 import com.wbbb.steam.dto.response.ResponseDto;
 import com.wbbb.steam.dto.response.data.WishlistItemDto;
 import com.wbbb.steam.service.UserService;
@@ -67,7 +67,7 @@ public class WishlistController {
     }
 
     @PutMapping("/sort")
-    public ResponseDto<?> sortWishlist(@RequestBody List<SortWishlistDto> list, @RequestHeader("token") String token) {
+    public ResponseDto<?> sortWishlist(@RequestBody List<SortWishlistRequestDto> list, @RequestHeader("token") String token) {
         Long userId = userService.parseToken(token);
         if (userId == null)
             return ResponseDto.unauthorized(null, "登录状态已失效，请重新登录");

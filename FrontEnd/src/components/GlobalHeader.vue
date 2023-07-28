@@ -13,8 +13,13 @@
           </div>
         </RouterLink>
         <RouterLink class="nav-item" :class="{ current: current === 1 }" to="/community">社区</RouterLink>
-        <RouterLink v-if="token" class="nav-item nickname" :class="{ current: current === 2 }" :to="`/profile/${userId}`">
-          {{ nickname }}</RouterLink>
+        <RouterLink v-if="token" class="nav-item nickname" :class="{ current: current === 2 }" :to="`/profile/${userId}`" @click="mineMenuLocked = true" @mouseenter="mineMenuLocked = false">
+          {{ nickname }}
+          <div v-show="!mineMenuLocked" class="nav-menu">
+            <RouterLink class="nav-menu-item" :to="`/profile/${userId}`" @click="mineMenuLocked = true">个人资料</RouterLink>
+            <RouterLink class="nav-menu-item" to="/friends" @click="mineMenuLocked = true">好友</RouterLink>
+          </div>
+        </RouterLink>
         <RouterLink v-else class="nav-item" :class="{ current: current === 3 }" to="/about">关于</RouterLink>
         <RouterLink v-if="token" class="nav-item" :class="{ current: current === 4 }" to="/chat">聊天</RouterLink>
         <RouterLink class="nav-item" :class="{ current: current === 5 }" to="">客服</RouterLink>
@@ -36,7 +41,7 @@
         </div>
 
         <RouterLink v-if="token" class="user-avatar" :to="`/profile/${userId}`">
-          <img :src="avatar || '/src/assets/blank.png'" alt="">
+          <img :src="avatar || 'https://steam-1314488277.cos.ap-guangzhou.myqcloud.com/assets%2Fdefault_avatar.jpg'" alt="">
         </RouterLink>
         <RouterLink v-else class="login" to="/login">登录</RouterLink>
       </div>
@@ -45,19 +50,36 @@
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 const storeMenuLocked = ref(false)
+const mineMenuLocked = ref(false)
 const actionMenuLocked = ref(false)
 
 const store = useStore()
-const current = computed(() => store.getters['current'])
 const token = computed(() => store.getters['user/token'])
 const userId = computed(() => store.getters['user/userId'])
 const username = computed(() => store.getters['user/username'])
 const nickname = computed(() => store.getters['user/nickname'])
 const avatar = computed(() => store.getters['user/avatar'])
+
+const route = useRoute()
+const current = computed(() => {
+  // 监听路由变化
+  if (['store', 'wishlist'].includes(route.name))
+    return 0
+  else if (['community', 'profile'].includes(route.name))
+    return (['profile'].includes(route.name) && token && store.getters['user/userId'].toString() === route.params.userId) ? 2 : 1
+  if (['friends', 'friendList', 'friendAdd', 'friendPending'].includes(route.name))
+    return 2
+  if (['about'].includes(route.name))
+    return 3
+  if (['chat'].includes(route.name))
+    return 4
+  return -1
+})
 
 function logout() {
   store.dispatch('user/logout')
@@ -95,6 +117,7 @@ function logout() {
 .nav {
   display: flex;
 }
+
 .nav-item {
   position: relative;
   padding: 7px;

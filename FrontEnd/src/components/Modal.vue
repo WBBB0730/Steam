@@ -13,7 +13,7 @@
 <script setup>
 import { ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true,
@@ -46,6 +46,8 @@ function success() {
 }
 
 function fail() {
+  if (!props.showCancel)
+    return
   modal.value.dispatchEvent(new CustomEvent('fail', { bubbles: true }))
   modal.value.dispatchEvent(new CustomEvent('complete', { bubbles: true }))
 }

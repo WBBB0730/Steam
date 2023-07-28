@@ -150,7 +150,8 @@ const store = useStore()
 const token = computed(() => store.getters['user/token'])
 
 onMounted(() => {
-  getWishlistSize()
+  if (token.value)
+    getWishlistSize()
   getRecommendations()
 })
 
@@ -247,7 +248,7 @@ function getRecommendations() {
   text-decoration: none;
   text-align: center;
   line-height: 20px;
-  background-color: #ffffff;
+  background-color: #6e96a0;
   background-image: url("@/assets/background_wishlist.jpg");
   background-size: cover;
   box-shadow: 0 0 3px #000000;

@@ -31,3 +31,11 @@ export function checkUsernameAvailableApi(username) {
         params: { username }
     })
 }
+
+export function searchUsersApi(keyword, pageIndex, pageSize) {
+    return request({
+        url: '/user/search',
+        method: 'GET',
+        params: { keyword, pageIndex, pageSize }
+    })
+}

@@ -1,6 +1,5 @@
 const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
-        console.log(entry)
         if (entry.isIntersecting) {
             entry.target.src = entry.target.dataset.src
             entry.target.dataset.src = null
@@ -9,9 +8,12 @@ const observer = new IntersectionObserver((entries, observer) => {
     })
 })
 
+import('@/assets/blank.png')
+
 export default {
     mounted(el, binding) {
-        el.src = '/assets/blank.png'
+        if (!el.src)
+            el.src = 'https://steam-1314488277.cos.ap-guangzhou.myqcloud.com/assets%2Fblank.png'
         el.dataset.src = binding.value
         observer.observe(el)
     }

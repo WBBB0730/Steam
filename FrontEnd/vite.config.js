@@ -19,5 +19,6 @@ export default defineConfig({
         additionalData: '@import "@/assets/steam.scss";'
       }
     }
-  }
+  },
+  base: '/steam/'
 })

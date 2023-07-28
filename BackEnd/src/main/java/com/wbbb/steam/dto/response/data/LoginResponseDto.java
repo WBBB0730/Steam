@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * /user/login 响应数据
+ */
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserInfoDto {
+public class LoginResponseDto {
+    private String token;
     private Long userId;
-    private String username;
-    private String nickname;
-    private String avatar;
 }

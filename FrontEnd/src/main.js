@@ -15,3 +15,4 @@ app.directive('loading', loadingDirective)
 app.directive('trunc', truncDirective)
 
 app.mount('#app')
+

@@ -41,7 +41,7 @@ export function getTimeStr(time, format1 = 'YYYY-MM-DD hh:mm:ss', format2 = '', 
     const date = new Date(time), now = new Date()
     const Y = date.getFullYear(), M = date.getMonth() + 1, D = date.getDate(),
         h = date.getHours(), m = date.getMinutes(), s = date.getSeconds()
-    const str = (format3.length > 0 && Y === now.getFullYear() && M === now.getMonth() && D === now.getSeconds()) ? format3 :
+    const str = (format3.length > 0 && Y === now.getFullYear() && M === now.getMonth() + 1 && D === now.getDate()) ? format3 :
         ((format2.length > 0 && Y === now.getFullYear()) ? format2 : format1)
     return str.replaceAll('YYYY', Y.toString())
         .replaceAll('YY', Y.toString().slice(-2))

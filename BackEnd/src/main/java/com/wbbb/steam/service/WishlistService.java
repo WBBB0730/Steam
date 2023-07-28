@@ -1,8 +1,7 @@
 package com.wbbb.steam.service;
 
-import com.wbbb.steam.dto.request.SortWishlistDto;
+import com.wbbb.steam.dto.request.SortWishlistRequestDto;
 import com.wbbb.steam.dto.response.data.WishlistItemDto;
-import com.wbbb.steam.entity.App;
 import com.wbbb.steam.entity.WishlistItem;
 import com.wbbb.steam.entity.WishlistItemId;
 import com.wbbb.steam.repository.AppRepository;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -21,15 +19,17 @@ public class WishlistService {
     private final WishlistRepository wishlistRepository;
     private final AppRepository appRepository;
 
+    /** 获取愿望单 */
     public List<WishlistItemDto> getWishlist(Long userId) {
-        List<WishlistItem> wishlist = wishlistRepository.findAllByUserId(userId);
-        return toWishlistItemDtoList(wishlist);
+        return wishlistRepository.getWishlist(userId);
     }
 
+    /** 获取愿望单物品数量 */
     public Integer getWishlistSize(Long userId) {
         return wishlistRepository.countAllByUserId(userId);
     }
 
+    /** 添加到愿望单 */
     public int addAppToWishlist(Long userId, Long appId) {
         if (!appRepository.existsById(appId))
             return 404;
@@ -39,6 +39,7 @@ public class WishlistService {
         return 200;
     }
 
+    /** 从愿望单移除 */
     public int removeAppFromWishlist(Long userId, Long appId) {
         if (!appRepository.existsById(appId) || !wishlistRepository.existsByUserIdAndAppId(userId, appId))
             return 404;
@@ -46,32 +47,18 @@ public class WishlistService {
         return 200;
     }
 
-    public void sortWishlist(Long userId, List<SortWishlistDto> list) {
+    /** 用户自定义排序 */
+    public void sortWishlist(Long userId, List<SortWishlistRequestDto> list) {
         Map<Long, Integer> map = new HashMap<>();
-        for (SortWishlistDto item : list)
+        for (SortWishlistRequestDto item : list)
             map.put(item.getAppId(), item.getSort());
         List<WishlistItem> wishlist = wishlistRepository.findAllByUserId(userId);
         for (WishlistItem item : wishlist) {
             if (map.containsKey(item.getAppId())) {
-                int sort = map.get(item.getAppId());
+                Integer sort = map.get(item.getAppId());
                 item.setSort(sort);
             }
         }
         wishlistRepository.saveAll(wishlist);
-    }
-
-    public WishlistItemDto toWishlistItemDto(WishlistItem wishlistItem) {
-        App app = appRepository.findById(wishlistItem.getAppId()).orElse(null);
-        if (app == null)
-            return null;
-        WishlistItemDto wishlistItemDto = new WishlistItemDto(app, wishlistItem);
-        wishlistItemDto.setStatus(1);
-        return wishlistItemDto;
-    }
-
-    public List<WishlistItemDto> toWishlistItemDtoList(List<WishlistItem> wishlistItemList) {
-        return wishlistItemList.stream()
-                .map(this::toWishlistItemDto)
-                .collect(Collectors.toList());
     }
 }
